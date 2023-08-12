@@ -1,8 +1,12 @@
 package com.likelion.nsu.gojisik.domain;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -11,6 +15,8 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@EntityListeners(AuditingEntityListener.class)
 public class User {
     @Id
     @GeneratedValue
@@ -20,7 +26,7 @@ public class User {
 
     private String password;
 
-    private String name;
+    @CreatedBy @Column(length = 10, nullable = false) private String name;
 
     private LocalDateTime birthday;
 
