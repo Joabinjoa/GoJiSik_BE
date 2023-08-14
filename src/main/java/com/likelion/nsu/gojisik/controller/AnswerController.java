@@ -1,9 +1,7 @@
 package com.likelion.nsu.gojisik.controller;
 
 import com.likelion.nsu.gojisik.domain.Answer;
-import com.likelion.nsu.gojisik.dto.AnswerRequestDto;
-import com.likelion.nsu.gojisik.dto.AnswerResponseDto;
-import com.likelion.nsu.gojisik.dto.ResponseDto;
+import com.likelion.nsu.gojisik.dto.*;
 import com.likelion.nsu.gojisik.dto.ResponseStatus;
 import com.likelion.nsu.gojisik.service.AnswerService;
 import lombok.RequiredArgsConstructor;

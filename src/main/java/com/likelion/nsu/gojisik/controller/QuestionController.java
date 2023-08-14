@@ -1,66 +1,116 @@
 package com.likelion.nsu.gojisik.controller;
 
 import com.likelion.nsu.gojisik.domain.Question;
-import com.likelion.nsu.gojisik.dto.RequestDto;
-import com.likelion.nsu.gojisik.dto.ResponseDto;
+import com.likelion.nsu.gojisik.dto.ResponseStatus;
+import com.likelion.nsu.gojisik.dto.*;
+import com.likelion.nsu.gojisik.service.FileService;
 import com.likelion.nsu.gojisik.service.QuestionService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/questions")
 @RequiredArgsConstructor
+@RequestMapping("/questions")
 public class QuestionController {
-
     private final QuestionService questionService;
+    private final FileService fileService;
 
-    @PostMapping
-    public ResponseEntity<Long> createQuestion(@RequestPart(name = "dto") RequestDto requestDto) {
-        try {
-            Long questionId = questionService.saveQuestion(requestDto);
-            return new ResponseEntity<>(questionId, HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
+    // 질문 리스트 조회
     @GetMapping
-    public ResponseEntity<List<ResponseDto>> getQuestionList() {
+    public ResponseEntity<?> findQuestions() {
         try {
-            List<ResponseDto> responseDtoList = questionService.getResponseDto();
-            return new ResponseEntity<>(responseDtoList, HttpStatus.OK);
+            List<Question> questions = questionService.findQuestions();
+            List<QuestionResponseDto> questionDtos = questions.stream()
+                    .map(QuestionResponseDto::new)
+                    .collect(Collectors.toList());
+
+            ResponseDto<QuestionResponseDto> response = ResponseDto.<QuestionResponseDto>builder()
+                    .status(ResponseStatus.SUCCESS)
+                    .data(questionDtos)
+                    .build();
+            return ResponseEntity.ok().body(response);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            ResponseDto<AnswerResponseDto> response = ResponseDto.<AnswerResponseDto>builder()
+                    .status(ResponseStatus.FAIL)
+                    .message(e.getMessage())
+                    .build();
+            return ResponseEntity.badRequest().body(response);
         }
     }
 
+    // 질문 생성
+    @PostMapping
+    public ResponseEntity<?> createQuestion(@AuthenticationPrincipal Long userId,
+                                            @RequestPart(name = "files") List<MultipartFile> files,
+                                            @RequestPart(name = "dto") QuestionRequestDto dto) {
+        try {
+            Long createdId = questionService.saveQuestion(userId, dto);
+            List<Long> result = new ArrayList<>(List.of(createdId));
+            fileService.saveFile(createdId, files);
+
+            ResponseDto<Long> response = ResponseDto.<Long>builder()
+                    .status(ResponseStatus.SUCCESS)
+                    .data(result)
+                    .build();
+            return ResponseEntity.ok().body(response);
+        } catch (Exception e) {
+            ResponseDto<AnswerResponseDto> response = ResponseDto.<AnswerResponseDto>builder()
+                    .status(ResponseStatus.FAIL)
+                    .message(e.getMessage())
+                    .build();
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+
+    // 질문 조회
     @GetMapping("/{question_id}")
-    public ResponseEntity<Question> getQuestionById(@PathVariable("question_id") Long questionId) {
+    public ResponseEntity<?> finedQuestion(@PathVariable("question_id") Long questionId) {
         try {
-            Optional<Question> question = questionService.findById(questionId);
-            return question.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
-                    .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+            Question question = questionService.findById(questionId);
+            QuestionResponseDto dto = new QuestionResponseDto(question);
+            List<QuestionResponseDto> result = new ArrayList<>(List.of(dto));
+
+            ResponseDto<QuestionResponseDto> response = ResponseDto.<QuestionResponseDto>builder()
+                    .status(ResponseStatus.SUCCESS)
+                    .data(result)
+                    .build();
+            return ResponseEntity.ok().body(response);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            ResponseDto<QuestionResponseDto> response = ResponseDto.<QuestionResponseDto>builder()
+                    .status(ResponseStatus.FAIL)
+                    .message(e.getMessage())
+                    .build();
+            return ResponseEntity.badRequest().body(response);
         }
     }
 
+    // 질문 내역
     @GetMapping("/my-question")
-    public ResponseEntity<List<Question>> getMyQuestionList() {
+    public ResponseEntity<?> findAnswersWithUser(@AuthenticationPrincipal Long userId) {
         try {
-            // 로그인된 사용자의 ID를 얻어온다고 가정 - 민서가 작성한 코드보고 수정해야 됌
-            Long userId = 123L;
-            List<Question> questionList = questionService.getMyQuestionList(userId);
-            return new ResponseEntity<>(questionList, HttpStatus.OK);
+            List<Question> questions = questionService.findByUserId(userId);
+            List<QuestionResponseDto> questionDtos = questions.stream()
+                    .map(QuestionResponseDto::new)
+                    .collect(Collectors.toList());
+
+            ResponseDto<QuestionResponseDto> response = ResponseDto.<QuestionResponseDto>builder()
+                    .status(ResponseStatus.SUCCESS)
+                    .data(questionDtos)
+                    .build();
+            return ResponseEntity.ok().body(response);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            ResponseDto<AnswerResponseDto> response = ResponseDto.<AnswerResponseDto>builder()
+                    .status(ResponseStatus.FAIL)
+                    .message(e.getMessage())
+                    .build();
+            return ResponseEntity.badRequest().body(response);
         }
     }
 }
