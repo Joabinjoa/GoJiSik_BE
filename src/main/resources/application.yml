@@ -6,11 +6,13 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         # show_sql: true
         format_sql: true
+  jwt:
+    secret: X1acF6kDq3Gv58f6K2dJf6m7M6v7hG3zF4hYk7u9r6jg9w0G4i5U3Kh8JrHqe5C5o7hF35H
 
 logging:
   level:

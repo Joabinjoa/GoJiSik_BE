@@ -1,12 +1,14 @@
 package com.likelion.nsu.gojisik.domain;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class File {
     @Id
     @GeneratedValue
@@ -21,7 +23,7 @@ public class File {
 
     private Long fileSize;
 
-    @OneToOne(mappedBy = "file", fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "question_id")
     private Question question;
 }
