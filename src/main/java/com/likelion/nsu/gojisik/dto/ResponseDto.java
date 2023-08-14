@@ -1,5 +1,6 @@
 package com.likelion.nsu.gojisik.dto;
 
+<<<<<<< HEAD
 import com.likelion.nsu.gojisik.domain.Question;
 import com.likelion.nsu.gojisik.domain.User;
 import lombok.Builder;
@@ -51,4 +52,19 @@ public class ResponseDto { //TODO - 감싸는거, 예외처리
         this.hits = hits;
         this.user = user;
     }
+=======
+import lombok.*;
+
+import java.util.List;
+
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class ResponseDto<T> {
+    private ResponseStatus status;
+    private String message;
+    private List<T> data;
+>>>>>>> 06c129a0c8e2d56188d524c7f2e75b86abd1f2c7
 }
