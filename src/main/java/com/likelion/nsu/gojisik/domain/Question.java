@@ -33,7 +33,7 @@ public class Question {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private User user;
+    private Member member;
 
     @OneToMany(mappedBy = "question")
     private List<Answer> answerList;
