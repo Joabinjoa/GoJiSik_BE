@@ -40,11 +40,10 @@ public class AuthController {
         LOGGER.info("asdf auth :{}", authentication);
         String jwt = tokenProvider.createToken((authentication));
 
-
         LOGGER.info("asdf auth :{}", jwt);
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(JwtFilter.AUTHORIZATION_HEADER, "Bearer " + jwt);
 
-        return new ResponseEntity<>(new TokenDto(jwt), httpHeaders, HttpStatus.OK);
+        return new ResponseEntity<>(new TokenDto(jwt, authenticationToken.getName()), httpHeaders, HttpStatus.OK);
     }
 }
