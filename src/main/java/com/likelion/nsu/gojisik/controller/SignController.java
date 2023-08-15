@@ -1,10 +1,10 @@
 package com.likelion.nsu.gojisik.controller;
 
 //import com.likelion.nsu.gojisik.domain.UserDetails;
-import com.likelion.nsu.gojisik.dto.*;
+
+import com.likelion.nsu.gojisik.dto.SignUpDto;
 import com.likelion.nsu.gojisik.service.SignService;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -13,8 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.web.bind.annotation.*;
-
-import java.io.IOException;
 
 
 @RestController
@@ -26,13 +24,7 @@ public class SignController {
     private final HttpServletRequest request;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
-
-    @PostMapping("/test-redirect")
-    public void testRedirect(HttpServletResponse response) throws IOException {
-        response.sendRedirect("/api/user");
-    }
-
-    @PostMapping("/signup")
+    @PostMapping("/users")
     public ResponseEntity<SignUpDto> signup(
             @Valid @RequestBody SignUpDto signUpDto
     ) {

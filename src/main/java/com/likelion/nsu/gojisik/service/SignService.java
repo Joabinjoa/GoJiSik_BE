@@ -55,7 +55,7 @@ public class SignService {
                 .username(signUpDto.getUsername())
                 .password(passwordEncoder.encode(signUpDto.getPassword()))
                 .phonenum(signUpDto.getPhonenum())
-                .font(signUpDto.getFont())
+                .birthday(signUpDto.getBirthday())
                 .authorities(Collections.singleton(authority))
                 .activated(true)
                 .build();

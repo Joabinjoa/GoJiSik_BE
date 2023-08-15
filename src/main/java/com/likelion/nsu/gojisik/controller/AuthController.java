@@ -28,7 +28,7 @@ public class AuthController {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
     private final Logger LOGGER = LoggerFactory.getLogger(AuthController.class);
 
-    @PostMapping("/users")
+    @PostMapping("/users/login")
     public ResponseEntity<TokenDto> authorize(@Valid @RequestBody SignInDto signInDto) {
 //        signInDto.phone(signInDto.getUsername(), signInDto.getPhonenum());
 
