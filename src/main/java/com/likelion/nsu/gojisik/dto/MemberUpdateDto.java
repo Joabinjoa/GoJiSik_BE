@@ -23,7 +23,7 @@ public class MemberUpdateDto {
     private int font;
     private Set<AuthorityDto> authorityDtoSet;
 
-    public SignUpDto(String name, String uid, String password, String phoneNumber, LocalDateTime birthday,Long id , int font){
+    public MemberUpdateDto(String name, String uid, String password, String phoneNumber, LocalDateTime birthday,Long id , int font){
         this.username =name;
         this.password = password;
         this.phoneNumber = phoneNumber;
@@ -31,11 +31,11 @@ public class MemberUpdateDto {
         this.id = id;
         this.font = font;
     }
-    public static SignUpDto from(Member member) {
+    public static MemberUpdateDto from(Member member) {
         if(member == null) return null;
 
-        return SignUpDto.builder()
-                .phoneNumber(member.getPhoneNumber())
+        return MemberUpdateDto.builder()
+                .phoneNumber(member.getPhonenum())
                 .username(member.getUsername())
                 .password(member.getPassword())
                 .font(member.getFont())

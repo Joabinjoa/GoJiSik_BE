@@ -1,7 +1,7 @@
 package com.likelion.nsu.gojisik.service;
 
+import com.likelion.nsu.gojisik.domain.Member;
 import com.likelion.nsu.gojisik.domain.Question;
-import com.likelion.nsu.gojisik.domain.User;
 import com.likelion.nsu.gojisik.dto.QuestionRequestDto;
 import com.likelion.nsu.gojisik.repository.QuestionRepository;
 import com.likelion.nsu.gojisik.repository.UserRepository;
@@ -22,7 +22,7 @@ public class QuestionService { //TODO - 테스트케이스 작성
     // 질문 등록
     @Transactional
     public Long saveQuestion(Long userId, QuestionRequestDto dto) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 유저입니다."));
+        Member user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 유저입니다."));
         Question question = Question.createQuestion(user, dto);
         questionRepository.save(question);
         return question.getId();
@@ -40,7 +40,7 @@ public class QuestionService { //TODO - 테스트케이스 작성
 
     // 질문 내역
     public List<Question> findByUserId(Long userId) {
-        return questionRepository.findByUser_Id(userId);
+        return questionRepository.findByMember_Id(userId);
     }
 }
 

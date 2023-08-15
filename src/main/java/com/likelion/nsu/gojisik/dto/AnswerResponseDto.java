@@ -22,6 +22,6 @@ public class AnswerResponseDto {
         this.contents = answer.getContents();
         this.createdDate = answer.getCreatedDate();
         this.isAdopted = answer.getIsAdopted();
-        this.writer = answer.getUser().getName();
+        this.writer = answer.getMember().getUsername();
     }
 }

@@ -45,15 +45,9 @@ public class SignController {
         return ResponseEntity.ok(signService.getMyUserWithAuthorities());
     }
 
-    @GetMapping("/user/{phonenum}")
-    @PreAuthorize("hasAnyRole('ADMIN')")
-    public ResponseEntity<SignUpDto> getUserInfo(@PathVariable String username) {
-        return ResponseEntity.ok(signService.getUserWithAuthorities(username));
-    }
-
     @PutMapping("/users/{phonenum}")
 //    @PreAuthorize("hasAnyRole('USER')")
-    public ResponseEntity<SignUpDto> getUdateInfo(@PathVariable String phonenum, @RequestBody SignUpDto signUpDto) {
+    public ResponseEntity<SignUpDto> getUpdateInfo(@PathVariable String phonenum, @RequestBody SignUpDto signUpDto) {
         signService.updateUserInfo(phonenum, signUpDto);
         return ResponseEntity.ok(signUpDto);
     }
