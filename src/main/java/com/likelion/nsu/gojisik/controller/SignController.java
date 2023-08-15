@@ -33,7 +33,7 @@ public class SignController {
 
     @GetMapping("/user/{phonenum}")
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
-    public ResponseEntity<SignUpDto> getMyUserInfo(HttpServletRequest request) {
+    public ResponseEntity<SignUpDto> getMyUserInfo(@PathVariable("phonenum") String phonenum, HttpServletRequest request) {
         return ResponseEntity.ok(signService.getMyUserWithAuthorities());
     }
 
