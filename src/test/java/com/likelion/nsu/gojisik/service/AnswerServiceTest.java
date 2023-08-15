@@ -1,8 +1,8 @@
 package com.likelion.nsu.gojisik.service;
 
 import com.likelion.nsu.gojisik.domain.Answer;
+import com.likelion.nsu.gojisik.domain.Member;
 import com.likelion.nsu.gojisik.domain.Question;
-import com.likelion.nsu.gojisik.domain.User;
 import com.likelion.nsu.gojisik.dto.AnswerRequestDto;
 import com.likelion.nsu.gojisik.repository.AnswerRepository;
 import jakarta.persistence.EntityManager;
@@ -34,8 +34,8 @@ class AnswerServiceTest {
     @Test
     void create() {
         // given
-        User user = new User();
-        em.persist(user);
+        Member member = new Member();
+        em.persist(member);
 
         Question question = new Question();
         em.persist(question);
@@ -43,7 +43,7 @@ class AnswerServiceTest {
         AnswerRequestDto dto = new AnswerRequestDto("123");
 
         // when
-        Long savedId = answerService.create(user.getId(), question.getId(), dto);
+        Long savedId = answerService.create(member.getId(), question.getId(), dto);
 
         // then
         Long answerId = answerRepository.findById(savedId).get().getId();
@@ -53,14 +53,14 @@ class AnswerServiceTest {
     @Test
     void adopt() {
         // given
-        User user = new User();
-        em.persist(user);
+        Member member = new Member();
+        em.persist(member);
 
         Question question = new Question();
         em.persist(question);
 
         AnswerRequestDto dto = new AnswerRequestDto("123");
-        Long savedId = answerService.create(user.getId(), question.getId(), dto);
+        Long savedId = answerService.create(member.getId(), question.getId(), dto);
 
         // when
         Long adoptedId = answerService.adopt(savedId);
@@ -73,18 +73,18 @@ class AnswerServiceTest {
     @Test
     void findAnswers() {
         // given
-        User user = new User();
-        em.persist(user);
+        Member member = new Member();
+        em.persist(member);
 
         Question question = new Question();
         em.persist(question);
 
         AnswerRequestDto dto = new AnswerRequestDto("123");
-        answerService.create(user.getId(), question.getId(), dto);
+        answerService.create(member.getId(), question.getId(), dto);
         AnswerRequestDto dto2 = new AnswerRequestDto("123123");
-        answerService.create(user.getId(), question.getId(), dto2);
+        answerService.create(member.getId(), question.getId(), dto2);
         AnswerRequestDto dto3 = new AnswerRequestDto("123123123");
-        answerService.create(user.getId(), question.getId(), dto3);
+        answerService.create(member.getId(), question.getId(), dto3);
 
         // when
         List<Answer> answerList = answerService.findAnswers(question.getId());
@@ -96,25 +96,25 @@ class AnswerServiceTest {
     @Test
     void findByUserId() {
         // given
-        User user = new User();
-        em.persist(user);
-        User user2 = new User();
-        em.persist(user2);
+        Member member = new Member();
+        em.persist(member);
+        Member member2 = new Member();
+        em.persist(member2);
 
         Question question = new Question();
         em.persist(question);
 
         AnswerRequestDto dto = new AnswerRequestDto("123");
-        answerService.create(user.getId(), question.getId(), dto);
+        answerService.create(member.getId(), question.getId(), dto);
 
         AnswerRequestDto dto2 = new AnswerRequestDto("123123");
-        answerService.create(user2.getId(), question.getId(), dto2);
+        answerService.create(member2.getId(), question.getId(), dto2);
         AnswerRequestDto dto3 = new AnswerRequestDto("123123123");
-        answerService.create(user2.getId(), question.getId(), dto3);
+        answerService.create(member2.getId(), question.getId(), dto3);
 
         // when
-        List<Answer> answerList = answerService.findByUserId(user.getId());
-        List<Answer> answerList2 = answerService.findByUserId(user2.getId());
+        List<Answer> answerList = answerService.findByUserId(member.getId());
+        List<Answer> answerList2 = answerService.findByUserId(member2.getId());
 
         // then
         Assertions.assertEquals(1, answerList.size());

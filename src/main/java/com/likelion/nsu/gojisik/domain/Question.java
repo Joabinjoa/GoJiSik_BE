@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.xml.stream.events.Comment;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -32,7 +31,7 @@ public class Question {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private User user;
+    private Member member;
 
     @OneToMany(mappedBy = "question")
     private List<Answer> answerList;
