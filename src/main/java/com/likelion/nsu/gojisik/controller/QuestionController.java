@@ -48,7 +48,7 @@ public class QuestionController {
     // 질문 생성
     @PostMapping
     public ResponseEntity<?> createQuestion(@AuthenticationPrincipal Long userId,
-                                            @RequestPart(name = "files") List<MultipartFile> files,
+                                            @RequestPart(name = "files", required = false) List<MultipartFile> files,
                                             @RequestPart(name = "dto") QuestionRequestDto dto) {
         try {
             Long createdId = questionService.saveQuestion(userId, dto);
@@ -63,7 +63,7 @@ public class QuestionController {
         } catch (Exception e) {
             ResponseDto<AnswerResponseDto> response = ResponseDto.<AnswerResponseDto>builder()
                     .status(ResponseStatus.FAIL)
-                    .message(e.getMessage())
+                    .message(e.toString())
                     .build();
             return ResponseEntity.badRequest().body(response);
         }
