@@ -24,16 +24,16 @@ public class Answer {
     private Boolean isAdopted;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "member_id")
+    private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "question_id")
     private Question question;
 
-    public static Answer createAnswer(User user, Question question, AnswerRequestDto dto){
+    public static Answer createAnswer(Member member, Question question, AnswerRequestDto dto){
         Answer answer = AnswerRequestDto.toEntity(dto);
-        answer.setUser(user);
+        answer.setMember(member);
         answer.setQuestion(question);
         return answer;
     }
