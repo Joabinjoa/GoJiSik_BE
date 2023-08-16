@@ -65,6 +65,7 @@ public class SecurityConfig  {
                                 .requestMatchers(HttpMethod.GET, "/questions").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/questions/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/answers/**").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/files/**").permitAll()
 
 //                        .requestMatchers("/hello", "/authenticate", "/signup").permitAll()
                                 .anyRequest().authenticated()
