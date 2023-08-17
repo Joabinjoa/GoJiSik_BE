@@ -8,6 +8,9 @@ import com.likelion.nsu.gojisik.service.FileService;
 import com.likelion.nsu.gojisik.service.QuestionService;
 import com.likelion.nsu.gojisik.service.SignService;
 import com.likelion.nsu.gojisik.util.SecurityUtil;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -81,7 +84,8 @@ public class QuestionController {
 
     // 질문 조회
     @GetMapping("/{question_id}")
-    public ResponseEntity<?> finedQuestion(@PathVariable("question_id") Long questionId) {
+    public ResponseEntity<?> finedQuestion(@PathVariable("question_id") Long questionId, @PathVariable("id") Integer id,
+                                           HttpServletRequest req, HttpServletResponse res) {
         try {
             Question question = questionService.findById(questionId);
             QuestionResponseDto dto = new QuestionResponseDto(question);
@@ -91,6 +95,32 @@ public class QuestionController {
                     .status(ResponseStatus.SUCCESS)
                     .data(result)
                     .build();
+
+            Cookie oldCookie = null;
+            Cookie[] cookies = req.getCookies();
+            if (cookies != null) {
+                for (Cookie cookie : cookies) {
+                    if (cookie.getName().equals("questionHits")) {
+                        oldCookie = cookie;
+                    }
+                }
+            }
+
+            if (oldCookie != null) {
+                if (!oldCookie.getValue().contains("["+ id.toString() +"]")) {
+                    this.questionService.updateHits(id);
+                    oldCookie.setValue(oldCookie.getValue() + "_[" + id + "]");
+                    oldCookie.setPath("/");
+                    oldCookie.setMaxAge(60 * 60 * 24); 							// 쿠키 시간
+                    res.addCookie(oldCookie);
+                }
+            } else {
+                this.questionService.updateHits(id);
+                Cookie newCookie = new Cookie("postView", "[" + id + "]");
+                newCookie.setPath("/");
+                newCookie.setMaxAge(60 * 60 * 24); 								// 쿠키 시간
+                res.addCookie(newCookie);
+            }
             return ResponseEntity.ok().body(response);
         } catch (Exception e) {
             ResponseDto<QuestionResponseDto> response = ResponseDto.<QuestionResponseDto>builder()

@@ -47,5 +47,10 @@ public class QuestionService { //TODO - 테스트케이스 작성
     public List<Question> findByUserId(Long userId) {
         return questionRepository.findByUser_Id(userId);
     }
+
+    @Transactional
+    public int updateHits(Integer id) {
+        return this.questionRepository.updateHits(id);
+    }
 }
 
