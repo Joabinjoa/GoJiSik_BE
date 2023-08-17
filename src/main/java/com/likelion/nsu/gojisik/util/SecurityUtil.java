@@ -1,11 +1,12 @@
 package com.likelion.nsu.gojisik.util;
 
 
+import com.likelion.nsu.gojisik.domain.UserDetails;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
+
 
 import java.util.Optional;
 
@@ -17,20 +18,21 @@ public class SecurityUtil {
 
     public static Optional<String> getCurrentUsername() {
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
+        logger.info("Authentication : {} " , authentication.getName());
         if (authentication == null) {
             logger.debug("Security Context에 인증 정보가 없습니다.");
             return Optional.empty();
         }
 
-        String username = null;
+        String phonenum = null;
         if (authentication.getPrincipal() instanceof UserDetails) {
             UserDetails springSecurityUser = (UserDetails) authentication.getPrincipal();
-            username = springSecurityUser.getUsername();
+            logger.info("springSecurityUser : {}" ,springSecurityUser);
+            phonenum = springSecurityUser.getPhonenum();
         } else if (authentication.getPrincipal() instanceof String) {
-            username = (String) authentication.getPrincipal();
+            phonenum = (String) authentication.getPrincipal();
         }
-
-        return Optional.ofNullable(username);
+        logger.info("phonenum:{}",phonenum);
+        return Optional.ofNullable(phonenum);
     }
 }

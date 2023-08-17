@@ -60,23 +60,15 @@ public class User implements UserDetails {
 
     }
 
-    @Override
-    public String toString() {
-        return "Member{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", phonenum=" + phonenum +
-                // 다른 멤버 변수들을 포함시키거나, 원하는 정보를 포함시키도록 수정
-                '}';
-    }
 
     public User(String username, String password, Collection<? extends GrantedAuthority> authorities) {
-        this.username = username;
+        this.phonenum = username;
         this.password = password;
         this.authorities = authorities.stream()
                 .filter(authority -> authority instanceof Authority)
                 .map(authority -> (Authority) authority)
                 .collect(Collectors.toSet());
+
     }
 
 
@@ -119,6 +111,14 @@ public class User implements UserDetails {
         authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
         return authorities;
     }
-
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", phonenum=" + phonenum +
+                // 다른 멤버 변수들을 포함시키거나, 원하는 정보를 포함시키도록 수정
+                '}';
+    }
 
 }

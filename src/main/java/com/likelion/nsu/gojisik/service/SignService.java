@@ -64,11 +64,11 @@ public class SignService {
     }
 
 
-    @Transactional(readOnly = true)
-
-    public SignUpDto getUserWithAuthorities(String phonenum) {
-        return SignUpDto.from(userRepository.findOneWithAuthoritiesByPhonenum(phonenum).orElse(null));
-    }
+//    @Transactional(readOnly = true)
+//
+//    public SignUpDto getUserWithAuthorities(String phonenum) {
+//        return SignUpDto.from(userRepository.findOneWithAuthoritiesByPhonenum(phonenum).orElse(null));
+//    }
 
     @Transactional(readOnly = true)
     public SignUpDto getMyUserWithAuthorities() {
