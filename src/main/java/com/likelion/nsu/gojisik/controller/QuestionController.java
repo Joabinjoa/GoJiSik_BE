@@ -97,23 +97,29 @@ public class QuestionController {
 
             Cookie oldCookie = null;
             Cookie[] cookies = req.getCookies();
+            // http 요청의 쿠키가 있다면
             if (cookies != null) {
                 for (Cookie cookie : cookies) {
-                    if (cookie.getName().equals("questionHits")) {
+                    if (cookie.getName().equals("postView")) {
                         oldCookie = cookie;
                     }
                 }
             }
 
+            // 이전 쿠키가 있다면
             if (oldCookie != null) {
+                // 값이 [ questionId ] 아니라면
                 if (!oldCookie.getValue().contains("["+ questionId.toString() +"]")) {
+                    // 조회수 증가
                     this.questionService.updateHits(questionId);
                     oldCookie.setValue(oldCookie.getValue() + "_[" + questionId + "]");
                     oldCookie.setPath("/");
                     oldCookie.setMaxAge(60 * 60 * 24); 							// 쿠키 시간
                     res.addCookie(oldCookie);
                 }
+            // 이전 쿠기가 없다면
             } else {
+                // 조회수 증가
                 this.questionService.updateHits(questionId);
                 Cookie newCookie = new Cookie("postView", "[" + questionId + "]");
                 newCookie.setPath("/");
