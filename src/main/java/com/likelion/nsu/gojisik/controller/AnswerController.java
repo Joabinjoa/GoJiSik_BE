@@ -4,6 +4,7 @@ import com.likelion.nsu.gojisik.domain.Answer;
 import com.likelion.nsu.gojisik.dto.*;
 import com.likelion.nsu.gojisik.dto.ResponseStatus;
 import com.likelion.nsu.gojisik.service.AnswerService;
+import com.likelion.nsu.gojisik.service.SignService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/answers")
 public class AnswerController {
     private final AnswerService answerService;
+    private final SignService signService;
 
     // 답변 조회
     @GetMapping("/{question_id}")
@@ -89,9 +91,9 @@ public class AnswerController {
 
     // 답변 내역
     @GetMapping("/my-answer")
-    public ResponseEntity<?> findAnswersWithUser(@AuthenticationPrincipal Long userId){
+    public ResponseEntity<?> findAnswersWithUser(){
         try{
-            List<Answer> answers = answerService.findByUserId(userId);
+            List<Answer> answers = answerService.findByUserId(signService.getMyUserWithAuthorities().getId());
             List<AnswerResponseDto> answerDtos = answers.stream()
                     .map(AnswerResponseDto::new)
                     .collect(Collectors.toList());

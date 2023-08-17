@@ -3,9 +3,14 @@ package com.likelion.nsu.gojisik.controller;
 import com.likelion.nsu.gojisik.domain.Question;
 import com.likelion.nsu.gojisik.dto.ResponseStatus;
 import com.likelion.nsu.gojisik.dto.*;
+import com.likelion.nsu.gojisik.service.AnswerService;
 import com.likelion.nsu.gojisik.service.FileService;
 import com.likelion.nsu.gojisik.service.QuestionService;
+import com.likelion.nsu.gojisik.service.SignService;
+import com.likelion.nsu.gojisik.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -19,9 +24,12 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @RequestMapping("/questions")
 public class QuestionController {
+
+    private static final Logger logger = LoggerFactory.getLogger(SecurityUtil.class);
     private final QuestionService questionService;
     private final FileService fileService;
-
+    private final SignService signService;
+    private final AnswerService answerService;
     // 질문 리스트 조회
     @GetMapping
     public ResponseEntity<?> findQuestions() {
@@ -47,11 +55,13 @@ public class QuestionController {
 
     // 질문 생성
     @PostMapping
-    public ResponseEntity<?> createQuestion(@AuthenticationPrincipal Long userId,
-                                            @RequestPart(name = "files", required = false) List<MultipartFile> files,
-                                            @RequestPart(name = "dto") QuestionRequestDto dto) {
+    public ResponseEntity<?> createQuestion(
+            @RequestPart(name = "files", required = false) List<MultipartFile> files,
+            @RequestPart(name = "dto") QuestionRequestDto dto) {
         try {
-            Long createdId = questionService.saveQuestion(userId, dto);
+
+            Long createdId = questionService.saveQuestion(signService.getMyUserWithAuthorities().getId(), dto);
+            logger.info("getid : {}",createdId);
             List<Long> result = new ArrayList<>(List.of(createdId));
             fileService.saveFile(createdId, files);
 
@@ -93,9 +103,11 @@ public class QuestionController {
 
     // 질문 내역
     @GetMapping("/my-question")
-    public ResponseEntity<?> findAnswersWithUser(@AuthenticationPrincipal Long userId) {
+    public ResponseEntity<?> findAnswersWithUser() {
         try {
-            List<Question> questions = questionService.findByUserId(userId);
+            Long userid = signService.getMyUserWithAuthorities().getId();
+            List<Question> questions = questionService.findByUserId(userid);
+            logger.info("questions:{}" , questions);
             List<QuestionResponseDto> questionDtos = questions.stream()
                     .map(QuestionResponseDto::new)
                     .collect(Collectors.toList());

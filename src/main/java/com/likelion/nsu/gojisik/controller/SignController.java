@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class SignController {
 
+
     private final Logger LOGGER = LoggerFactory.getLogger(SignController.class);
     private final SignService signService;
     private final HttpServletRequest request;
@@ -31,9 +32,9 @@ public class SignController {
         return ResponseEntity.ok(signService.signup(signUpDto));
     }
 
-    @GetMapping("/user/{phonenum}")
-    @PreAuthorize("hasAnyRole('USER','ADMIN')")
-    public ResponseEntity<SignUpDto> getMyUserInfo(@PathVariable("phonenum") String phonenum, HttpServletRequest request) {
+    @GetMapping("/user6")
+//    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    public ResponseEntity<SignUpDto> getMyUserInfo( HttpServletRequest request) {
         return ResponseEntity.ok(signService.getMyUserWithAuthorities());
     }
 

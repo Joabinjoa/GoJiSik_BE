@@ -1,6 +1,6 @@
 package com.likelion.nsu.gojisik.dto;
 
-import com.likelion.nsu.gojisik.domain.Member;
+import com.likelion.nsu.gojisik.domain.User;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -24,16 +24,16 @@ public class SignUpDto {
     private int font;
     private Set<AuthorityDto> authorityDtoSet;
 
-    public static SignUpDto from(Member member) {
-        if(member == null) return null;
+    public static SignUpDto from(User user) {
+        if(user == null) return null;
 
         return SignUpDto.builder()
-                .phonenum(member.getPhonenum())
-                .username(member.getUsername())
-                .password(member.getPassword())
-                .font(member.getFont())
-                .birthday(member.getBirthDay())
-                .authorityDtoSet(member.getAuthorities().stream()
+                .phonenum(user.getPhonenum())
+                .username(user.getUsername())
+                .password(user.getPassword())
+                .font(user.getFont())
+                .birthday(user.getBirthDay())
+                .authorityDtoSet(user.getAuthorities().stream()
                         .map(authority -> AuthorityDto.builder().authorityName(authority.getAuthority()).build())
                         .collect(Collectors.toSet()))
                 .build();

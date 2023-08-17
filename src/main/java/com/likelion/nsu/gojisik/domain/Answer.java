@@ -25,15 +25,15 @@ public class Answer {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
-    private Member member;
+    private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "question_id")
     private Question question;
 
-    public static Answer createAnswer(Member member, Question question, AnswerRequestDto dto){
+    public static Answer createAnswer(User user, Question question, AnswerRequestDto dto){
         Answer answer = AnswerRequestDto.toEntity(dto);
-        answer.setMember(member);
+        answer.setUser(user);
         answer.setQuestion(question);
         return answer;
     }

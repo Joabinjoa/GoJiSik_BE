@@ -1,7 +1,7 @@
 package com.likelion.nsu.gojisik.service;
 
 import com.likelion.nsu.gojisik.domain.Answer;
-import com.likelion.nsu.gojisik.domain.Member;
+import com.likelion.nsu.gojisik.domain.User;
 import com.likelion.nsu.gojisik.domain.Question;
 import com.likelion.nsu.gojisik.dto.AnswerRequestDto;
 import com.likelion.nsu.gojisik.repository.AnswerRepository;
@@ -24,7 +24,7 @@ public class AnswerService {
 
     @Transactional
     public Long create(Long userId, Long questionId, AnswerRequestDto dto){
-        Member user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 유저입니다."));
+        User user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 유저입니다."));
         Question question = questionRepository.findById(questionId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 질문입니다."));
         Answer answer = Answer.createAnswer(user, question, dto);
         answerRepository.save(answer);
@@ -43,6 +43,6 @@ public class AnswerService {
     }
 
     public List<Answer> findByUserId(Long userId){
-        return answerRepository.findByMember_Id(userId);
+        return answerRepository.findByUser_Id(userId);
     }
 }

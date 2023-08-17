@@ -2,7 +2,7 @@ package com.likelion.nsu.gojisik.service;
 
 //import com.likelion.nsu.gojisik.config.CommonResponse;
 import com.likelion.nsu.gojisik.domain.Authority;
-import com.likelion.nsu.gojisik.domain.Member;
+import com.likelion.nsu.gojisik.domain.User;
 import com.likelion.nsu.gojisik.dto.*;
 import com.likelion.nsu.gojisik.exception.DuplicateMemberException;
 import com.likelion.nsu.gojisik.exception.NotFoundMemberException;
@@ -51,7 +51,7 @@ public class SignService {
                 .authorityName("ROLE_USER")
                 .build();
 
-        Member member = Member.builder()
+        User user = User.builder()
                 .username(signUpDto.getUsername())
                 .password(passwordEncoder.encode(signUpDto.getPassword()))
                 .phonenum(signUpDto.getPhonenum())
@@ -60,7 +60,7 @@ public class SignService {
                 .activated(true)
                 .build();
 
-        return SignUpDto.from(userRepository.save(member));
+        return SignUpDto.from(userRepository.save(user));
     }
 
 
@@ -79,18 +79,18 @@ public class SignService {
         );
     }
 
-    public Member updateUserInfo(String phonenum, SignUpDto signUpDto) {
-        Member member = userRepository.findOneWithAuthoritiesByPhonenum(phonenum)
+    public User updateUserInfo(String phonenum, SignUpDto signUpDto) {
+        User user = userRepository.findOneWithAuthoritiesByPhonenum(phonenum)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + phonenum));
 
         // 업데이트할 정보를 updateInfo로부터 받아와서 member 엔터티에 반영
-        member.setPhonenum(signUpDto.getPhonenum());
-        member.setPassword(passwordEncoder.encode(signUpDto.getPassword()));
-        member.setBirthday(signUpDto.getBirthday());
-        member.setFont(signUpDto.getFont());
-        member.setPassword(signUpDto.getPassword());
+        user.setPhonenum(signUpDto.getPhonenum());
+        user.setPassword(passwordEncoder.encode(signUpDto.getPassword()));
+        user.setBirthday(signUpDto.getBirthday());
+        user.setFont(signUpDto.getFont());
+        user.setPassword(signUpDto.getPassword());
 
-        return userRepository.save(member);
+        return userRepository.save(user);
     }
 }
 

@@ -32,15 +32,15 @@ public class Question {
     private List<File> files;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    private Member member;
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @OneToMany(mappedBy = "question")
     private List<Answer> answerList;
 
-    public static Question createQuestion(Member member, QuestionRequestDto dto){
+    public static Question createQuestion(User user, QuestionRequestDto dto){
         Question question = QuestionRequestDto.toEntity(dto);
-        question.setMember(member);
+        question.setUser(user);
         return question;
     }
 }
