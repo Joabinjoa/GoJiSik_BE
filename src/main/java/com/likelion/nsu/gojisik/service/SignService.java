@@ -88,18 +88,18 @@ public class SignService {
         );
     }
 
-    public User updateUserInfo(String phonenum, SignUpDto signUpDto) {
+    @Transactional
+    public User updateUserInfo(String phonenum, MemberUpdateDto memberUpdateDto) {
         User user = userRepository.findOneWithAuthoritiesByPhonenum(phonenum)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + phonenum));
-
+            LOGGER.info("updateuser : {}" ,user);
         // 업데이트할 정보를 updateInfo로부터 받아와서 member 엔터티에 반영
-        user.setPhonenum(signUpDto.getPhonenum());
-        user.setPassword(passwordEncoder.encode(signUpDto.getPassword()));
-        user.setBirthday(signUpDto.getBirthday());
-        user.setFont(signUpDto.getFont());
-        user.setPassword(signUpDto.getPassword());
 
+        user.setPassword(passwordEncoder.encode(memberUpdateDto.getPassword()));
+        user.setBirthday(memberUpdateDto.getBirthday());
+        user.setUsername(memberUpdateDto.getUsername());
         return userRepository.save(user);
+
     }
 }
 
