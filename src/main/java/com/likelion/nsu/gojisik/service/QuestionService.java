@@ -49,7 +49,7 @@ public class QuestionService { //TODO - 테스트케이스 작성
     }
 
     @Transactional
-    public int updateHits(Integer id) {
+    public int updateHits(Long id) {
         return this.questionRepository.updateHits(id);
     }
 }

@@ -15,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -84,7 +83,7 @@ public class QuestionController {
 
     // 질문 조회
     @GetMapping("/{question_id}")
-    public ResponseEntity<?> finedQuestion(@PathVariable("question_id") Long questionId, @PathVariable("id") Integer id,
+    public ResponseEntity<?> finedQuestion(@PathVariable("question_id") Long questionId,
                                            HttpServletRequest req, HttpServletResponse res) {
         try {
             Question question = questionService.findById(questionId);
@@ -107,16 +106,16 @@ public class QuestionController {
             }
 
             if (oldCookie != null) {
-                if (!oldCookie.getValue().contains("["+ id.toString() +"]")) {
-                    this.questionService.updateHits(id);
-                    oldCookie.setValue(oldCookie.getValue() + "_[" + id + "]");
+                if (!oldCookie.getValue().contains("["+ questionId.toString() +"]")) {
+                    this.questionService.updateHits(questionId);
+                    oldCookie.setValue(oldCookie.getValue() + "_[" + questionId + "]");
                     oldCookie.setPath("/");
                     oldCookie.setMaxAge(60 * 60 * 24); 							// 쿠키 시간
                     res.addCookie(oldCookie);
                 }
             } else {
-                this.questionService.updateHits(id);
-                Cookie newCookie = new Cookie("postView", "[" + id + "]");
+                this.questionService.updateHits(questionId);
+                Cookie newCookie = new Cookie("postView", "[" + questionId + "]");
                 newCookie.setPath("/");
                 newCookie.setMaxAge(60 * 60 * 24); 								// 쿠키 시간
                 res.addCookie(newCookie);
