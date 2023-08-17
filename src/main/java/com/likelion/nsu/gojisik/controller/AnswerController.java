@@ -1,19 +1,23 @@
 package com.likelion.nsu.gojisik.controller;
 
 import com.likelion.nsu.gojisik.domain.Answer;
-import com.likelion.nsu.gojisik.dto.*;
+
+import com.likelion.nsu.gojisik.dto.AnswerRequestDto;
+import com.likelion.nsu.gojisik.dto.AnswerResponseDto;
+import com.likelion.nsu.gojisik.dto.ResponseDto;
 import com.likelion.nsu.gojisik.dto.ResponseStatus;
 import com.likelion.nsu.gojisik.service.AnswerService;
 import com.likelion.nsu.gojisik.service.SignService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/answers")
@@ -46,8 +50,7 @@ public class AnswerController {
 
     // 답변 생성
     @PostMapping("/{question_id}")
-    public ResponseEntity<?> createAnswer(
-                                          @PathVariable("question_id") Long questionId,
+    public ResponseEntity<?> createAnswer(@PathVariable("question_id") Long questionId,
                                           @RequestBody AnswerRequestDto dto){
         try{
             Long userId = signService.getMyUserWithAuthorities().getId();
