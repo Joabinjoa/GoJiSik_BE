@@ -26,6 +26,6 @@ public class QuestionResponseDto { //TODO - 감싸는거, 예외처리
         this.contents = question.getContents();
         this.createdDate = question.getCreatedDate();
         this.hits = question.getHits();
-//        this.writer = question.getMember().getUsername();
+        this.writer = question.getUser().getUsername();
     }
 }

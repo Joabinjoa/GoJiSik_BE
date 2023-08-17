@@ -79,6 +79,15 @@ public class SignService {
         );
     }
 
+    @Transactional(readOnly = true)
+    public SignUpDto getMyUserInfo() {
+        return SignUpDto.Infofrom(
+                SecurityUtil.getCurrentUsername()
+                        .flatMap(userRepository::findOneWithAuthoritiesByPhonenum)
+                        .orElseThrow(() -> new NotFoundMemberException("Member not found"))
+        );
+    }
+
     public User updateUserInfo(String phonenum, SignUpDto signUpDto) {
         User user = userRepository.findOneWithAuthoritiesByPhonenum(phonenum)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + phonenum));
