@@ -2,6 +2,7 @@ package com.likelion.nsu.gojisik.controller;
 
 //import com.likelion.nsu.gojisik.domain.UserDetails;
 
+import com.likelion.nsu.gojisik.dto.MemberUpdateDto;
 import com.likelion.nsu.gojisik.dto.SignUpDto;
 import com.likelion.nsu.gojisik.service.SignService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -40,8 +41,8 @@ public class SignController {
 
     @PutMapping("/users/{phonenum}")
 //    @PreAuthorize("hasAnyRole('USER')")
-    public ResponseEntity<SignUpDto> getUpdateInfo(@PathVariable String phonenum, @RequestBody SignUpDto signUpDto) {
-        signService.updateUserInfo(phonenum, signUpDto);
-        return ResponseEntity.ok(signUpDto);
+    public ResponseEntity<MemberUpdateDto> getUpdateInfo(@PathVariable String phonenum, @RequestBody MemberUpdateDto memberUpdateDto) {
+        signService.updateUserInfo(phonenum, memberUpdateDto);
+        return ResponseEntity.ok(memberUpdateDto);
     }
 }
