@@ -26,6 +26,7 @@ public class Question {
 
     private LocalDateTime createdDate;
 
+    @Column(columnDefinition = "integer default 0", nullable = false)
     private Long hits;
 
     @OneToMany(mappedBy = "question")
