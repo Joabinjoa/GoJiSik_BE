@@ -33,6 +33,7 @@ public class SignUpDto {
                 .password(user.getPassword())
                 .font(user.getFont())
                 .birthday(user.getBirthDay())
+                .id(user.getId())
                 .authorityDtoSet(user.getAuthorities().stream()
                         .map(authority -> AuthorityDto.builder().authorityName(authority.getAuthority()).build())
                         .collect(Collectors.toSet()))

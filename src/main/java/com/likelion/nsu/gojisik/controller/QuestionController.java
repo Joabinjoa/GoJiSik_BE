@@ -59,7 +59,7 @@ public class QuestionController {
             @RequestPart(name = "files", required = false) List<MultipartFile> files,
             @RequestPart(name = "dto") QuestionRequestDto dto) {
         try {
-
+            logger.info("유저아이디 : {}" ,signService.getMyUserWithAuthorities());
             Long createdId = questionService.saveQuestion(signService.getMyUserWithAuthorities().getId(), dto);
             logger.info("getid : {}",createdId);
             List<Long> result = new ArrayList<>(List.of(createdId));

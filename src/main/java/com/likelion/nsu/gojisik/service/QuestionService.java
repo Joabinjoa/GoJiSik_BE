@@ -6,6 +6,8 @@ import com.likelion.nsu.gojisik.dto.QuestionRequestDto;
 import com.likelion.nsu.gojisik.repository.QuestionRepository;
 import com.likelion.nsu.gojisik.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,11 +20,14 @@ import java.util.NoSuchElementException;
 public class QuestionService { //TODO - 테스트케이스 작성
     private final UserRepository userRepository;
     private final QuestionRepository questionRepository;
+    private final Logger LOGGER = LoggerFactory.getLogger(SignService.class);
 
     // 질문 등록
     @Transactional
     public Long saveQuestion(Long userId, QuestionRequestDto dto) {
+
         User user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("존재하지 않는 유저입니다."));
+         LOGGER.info("user.getid: {}" , user.getId() );
         Question question = Question.createQuestion(user, dto);
         questionRepository.save(question);
         return question.getId();
