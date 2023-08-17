@@ -46,10 +46,11 @@ public class AnswerController {
 
     // 답변 생성
     @PostMapping("/{question_id}")
-    public ResponseEntity<?> createAnswer(@AuthenticationPrincipal Long userId,
+    public ResponseEntity<?> createAnswer(
                                           @PathVariable("question_id") Long questionId,
                                           @RequestBody AnswerRequestDto dto){
         try{
+            Long userId = signService.getMyUserWithAuthorities().getId();
             Long createdId = answerService.create(userId, questionId, dto);
             List<Long> result = new ArrayList<>(List.of(createdId));
 
@@ -69,9 +70,10 @@ public class AnswerController {
 
     // 답변 채택
     @PutMapping("/{answer_id}")
-    public ResponseEntity<?> adoptAnswer(@AuthenticationPrincipal String userId,
+    public ResponseEntity<?> adoptAnswer(
                                          @PathVariable("answer_id") Long answerId){
         try{
+            Long userId = signService.getMyUserWithAuthorities().getId();
             Long adoptedId = answerService.adopt(answerId);
             List<Long> result = new ArrayList<>(List.of(adoptedId));
 
