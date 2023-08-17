@@ -32,10 +32,10 @@ public class SignController {
         return ResponseEntity.ok(signService.signup(signUpDto));
     }
 
-    @GetMapping("/user6")
+    @GetMapping("/users")
 //    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public ResponseEntity<SignUpDto> getMyUserInfo( HttpServletRequest request) {
-        return ResponseEntity.ok(signService.getMyUserWithAuthorities());
+        return ResponseEntity.ok(signService.getMyUserInfo());
     }
 
     @PutMapping("/users/{phonenum}")

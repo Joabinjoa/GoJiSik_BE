@@ -95,7 +95,9 @@ public class AnswerController {
     @GetMapping("/my-answer")
     public ResponseEntity<?> findAnswersWithUser(){
         try{
-            List<Answer> answers = answerService.findByUserId(signService.getMyUserWithAuthorities().getId());
+            Long userid = signService.getMyUserWithAuthorities().getId();
+
+            List<Answer> answers = answerService.findByUserId(userid);
             List<AnswerResponseDto> answerDtos = answers.stream()
                     .map(AnswerResponseDto::new)
                     .collect(Collectors.toList());

@@ -105,7 +105,9 @@ public class QuestionController {
     @GetMapping("/my-question")
     public ResponseEntity<?> findAnswersWithUser() {
         try {
+
             Long userid = signService.getMyUserWithAuthorities().getId();
+            logger.info("userid : ", userid);
             List<Question> questions = questionService.findByUserId(userid);
             logger.info("questions:{}" , questions);
             List<QuestionResponseDto> questionDtos = questions.stream()

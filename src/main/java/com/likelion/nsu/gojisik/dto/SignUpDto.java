@@ -40,5 +40,17 @@ public class SignUpDto {
                 .build();
     }
 
+    public static SignUpDto Infofrom(User user) {
+        if(user == null) return null;
+
+        return SignUpDto.builder()
+                .phonenum(user.getPhonenum())
+                .username(user.getUsername())
+                .birthday(user.getBirthDay())
+                .authorityDtoSet(user.getAuthorities().stream()
+                        .map(authority -> AuthorityDto.builder().authorityName(authority.getAuthority()).build())
+                        .collect(Collectors.toSet()))
+                .build();
+    }
 
 }
