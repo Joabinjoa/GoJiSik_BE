@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3305/gojisik1?createDatabaseIfNotExist=true
+    url: jdbc:mysql://localhost:3306/gojisik?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
     username: root
-    password: 981211ym.
+    password: 1q2w3e4r
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
