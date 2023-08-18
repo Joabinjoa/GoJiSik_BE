@@ -74,7 +74,6 @@ public class FileHandler {
             file = new java.io.File(absolutePath + path + "/" + newFileName);
             multipartFile.transferTo(file);
         }
-
         return files;
     }
 }

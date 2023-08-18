@@ -4,17 +4,14 @@ import com.likelion.nsu.gojisik.domain.User;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-@ToString
 @Getter
 @Builder
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
 public class MemberUpdateDto {
-
     private String password;
     private String username;
     private LocalDateTime birthday;

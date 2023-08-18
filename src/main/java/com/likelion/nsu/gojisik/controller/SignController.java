@@ -8,39 +8,27 @@ import com.likelion.nsu.gojisik.service.SignService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.web.bind.annotation.*;
 
 
 @RestController
+@RequestMapping("users")
 @RequiredArgsConstructor
 public class SignController {
-
-
-    private final Logger LOGGER = LoggerFactory.getLogger(SignController.class);
     private final SignService signService;
-    private final HttpServletRequest request;
-    private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
-    @PostMapping("/users")
-    public ResponseEntity<SignUpDto> signup(
-            @Valid @RequestBody SignUpDto signUpDto
-    ) {
+    @PostMapping
+    public ResponseEntity<SignUpDto> signup(@Valid @RequestBody SignUpDto signUpDto) {
         return ResponseEntity.ok(signService.signup(signUpDto));
     }
 
-    @GetMapping("/users")
-//    @PreAuthorize("hasAnyRole('USER','ADMIN')")
+    @GetMapping
     public ResponseEntity<SignUpDto> getMyUserInfo( HttpServletRequest request) {
         return ResponseEntity.ok(signService.getMyUserInfo());
     }
 
     @PutMapping("/users/{phonenum}")
-//    @PreAuthorize("hasAnyRole('USER')")
     public ResponseEntity<MemberUpdateDto> getUpdateInfo(@PathVariable String phonenum, @RequestBody MemberUpdateDto memberUpdateDto) {
         signService.updateUserInfo(phonenum, memberUpdateDto);
         return ResponseEntity.ok(memberUpdateDto);

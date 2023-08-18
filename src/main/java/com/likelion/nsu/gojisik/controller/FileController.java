@@ -30,7 +30,6 @@ public class FileController {
                     .filter(file -> file.getType() == FileType.Image)
                     .map(file -> "file:" + file.getSavedFileName())
                     .toList();
-            log.info(imageUrl.get(0));
             UrlResource resource = new UrlResource(imageUrl.get(0));
             return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(resource);
         }catch (Exception e){
@@ -55,7 +54,7 @@ public class FileController {
             ResourceRegion region = resourceRegion(resource, headers);
             return ResponseEntity.ok()
                     .contentType(MediaType.parseMediaType("video/mp4"))
-                    .body(resource);
+                    .body(region);
         }catch (Exception e){
             ResponseDto response = ResponseDto.builder()
                     .status(ResponseStatus.FAIL)

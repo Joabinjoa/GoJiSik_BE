@@ -49,36 +49,25 @@ public class SecurityConfig  {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                // token을 사용하는 방식이기 때문에 csrf를 disable합니다.
-                .csrf(csrf -> csrf.disable())
+        .csrf(csrf -> csrf.disable())
+        .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
+        .exceptionHandling(exceptionHandling -> exceptionHandling
+                .accessDeniedHandler(jwtAccessDeniedHandler)
+                .authenticationEntryPoint(jwtAuthenticationEntryPoint))
+        .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests.requestMatchers(
+                        new AntPathRequestMatcher("/users"), new AntPathRequestMatcher("/users/login")).permitAll()
+                        .requestMatchers(HttpMethod.GET, "/questions").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/questions/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/answers/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/files/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/files/image/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/files/audio/**").permitAll()
+                        .anyRequest().authenticated())
+        // 세션을 사용하지 않기 때문에 STATELESS로 설정
+        .sessionManagement(sessionManagement -> sessionManagement
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .apply(new JwtSecurityConfig(tokenProvider));
 
-                .addFilterBefore(corsFilter, UsernamePasswordAuthenticationFilter.class)
-                .exceptionHandling(exceptionHandling -> exceptionHandling
-                        .accessDeniedHandler(jwtAccessDeniedHandler)
-                        .authenticationEntryPoint(jwtAuthenticationEntryPoint)
-                )
-
-                .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
-                                .requestMatchers(new AntPathRequestMatcher("/users")
-                                        , new AntPathRequestMatcher("/users/login")
-                                ).permitAll()
-                                .requestMatchers(HttpMethod.GET, "/questions").permitAll()
-                                .requestMatchers(HttpMethod.GET, "/questions/**").permitAll()
-                                .requestMatchers(HttpMethod.GET, "/answers/**").permitAll()
-                                .requestMatchers(HttpMethod.GET, "/files/**").permitAll()
-                                .requestMatchers(HttpMethod.GET, "/files/image/**").permitAll()
-                                .requestMatchers(HttpMethod.GET, "/files/audio/**").permitAll()
-
-//                        .requestMatchers("/hello", "/authenticate", "/signup").permitAll()
-                                .anyRequest().authenticated()
-                )
-
-                // 세션을 사용하지 않기 때문에 STATELESS로 설정
-                .sessionManagement(sessionManagement ->
-                        sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
-
-                .apply(new JwtSecurityConfig(tokenProvider));
         return http.build();
     }
 }

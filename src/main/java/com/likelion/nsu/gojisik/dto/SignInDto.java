@@ -14,10 +14,5 @@ public class SignInDto {
     @NotNull
     @Size(min = 3, max = 100)
     private String password;
-
     private String phonenum;
-
-//   public void phone(String username, String phonenum){
-//       username = phonenum;
-//   }
 }

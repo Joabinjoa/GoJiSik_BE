@@ -1,8 +1,6 @@
 package com.likelion.nsu.gojisik.domain;
 
 
-
-import io.jsonwebtoken.Claims;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -19,14 +17,13 @@ import java.util.stream.Collectors;
 @Getter
 @Setter
 @Builder
+@NoArgsConstructor
 @AllArgsConstructor
-
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private Long id;
-
 
     private String phonenum;
 
@@ -35,11 +32,14 @@ public class User implements UserDetails {
     private String username;
 
     private int font;
+
     private LocalDateTime birthday;
 
     private Grade grade;
 
     private Long point;
+
+    private boolean activated;
 
     @OneToMany(mappedBy = "user")
     private List<Question> questionList = new ArrayList<>();
@@ -47,19 +47,11 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user")
     private List<Answer> answerList = new ArrayList<>();
 
-    private boolean activated;
-
     @ManyToMany(cascade = CascadeType.PERSIST)
-    @JoinTable(
-            name = "user_authority",
-            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "user_id")},
-            inverseJoinColumns = {@JoinColumn(name = "authority_name", referencedColumnName = "authority_name")})
+    @JoinTable(name = "user_authority",
+               joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "user_id")},
+               inverseJoinColumns = {@JoinColumn(name = "authority_name", referencedColumnName = "authority_name")})
     private Set<Authority> authorities;
-
-    public User() {
-
-    }
-
 
     public User(String username, String password, Collection<? extends GrantedAuthority> authorities) {
         this.phonenum = username;
@@ -68,17 +60,15 @@ public class User implements UserDetails {
                 .filter(authority -> authority instanceof Authority)
                 .map(authority -> (Authority) authority)
                 .collect(Collectors.toSet());
-
-    }
-
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return false;
     }
 
     public LocalDateTime getBirthDay() {
         return this.birthday;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return false;
     }
 
     @Override
@@ -101,7 +91,6 @@ public class User implements UserDetails {
         return false;
     }
 
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         // 사용자의 권한 정보를 가져와서 GrantedAuthority 객체로 변환하여 반환
@@ -111,6 +100,7 @@ public class User implements UserDetails {
         authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
         return authorities;
     }
+
     @Override
     public String toString() {
         return "User{" +
@@ -120,5 +110,4 @@ public class User implements UserDetails {
                 // 다른 멤버 변수들을 포함시키거나, 원하는 정보를 포함시키도록 수정
                 '}';
     }
-
 }

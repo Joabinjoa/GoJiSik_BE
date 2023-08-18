@@ -11,7 +11,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import java.util.Optional;
 
 public class SecurityUtil {
-
     private static final Logger logger = LoggerFactory.getLogger(SecurityUtil.class);
 
     private SecurityUtil() {}
@@ -19,6 +18,7 @@ public class SecurityUtil {
     public static Optional<String> getCurrentUsername() {
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         logger.info("Authentication : {} " , authentication.getName());
+
         if (authentication == null) {
             logger.debug("Security Context에 인증 정보가 없습니다.");
             return Optional.empty();
@@ -32,6 +32,7 @@ public class SecurityUtil {
         } else if (authentication.getPrincipal() instanceof String) {
             phonenum = (String) authentication.getPrincipal();
         }
+
         logger.info("phonenum:{}",phonenum);
         return Optional.ofNullable(phonenum);
     }

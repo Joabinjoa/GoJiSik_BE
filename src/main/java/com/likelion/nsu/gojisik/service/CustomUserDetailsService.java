@@ -29,7 +29,6 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     @Transactional
     public UserDetails loadUserByUsername(final String phonenum) throws UsernameNotFoundException {
-
         return userRepository.findOneWithAuthoritiesByPhonenum(phonenum)
                 .map(user -> createUser(phonenum, user))
                 .orElseThrow(() -> new UsernameNotFoundException(phonenum + " -> 데이터베이스에서 찾을 수 없습니다."));

@@ -24,8 +24,6 @@ import java.util.Collections;
 @Service
 public class SignService {
     private final Logger LOGGER = LoggerFactory.getLogger(SignService.class);
-
-
     public TokenProvider tokenProvider;
     public PasswordEncoder passwordEncoder;
     public UserRepository userRepository;
@@ -46,7 +44,6 @@ public class SignService {
 
         }
 
-
         Authority authority = Authority.builder()
                 .authorityName("ROLE_USER")
                 .build();
@@ -62,13 +59,6 @@ public class SignService {
 
         return SignUpDto.from(userRepository.save(user));
     }
-
-
-//    @Transactional(readOnly = true)
-//
-//    public SignUpDto getUserWithAuthorities(String phonenum) {
-//        return SignUpDto.from(userRepository.findOneWithAuthoritiesByPhonenum(phonenum).orElse(null));
-//    }
 
     @Transactional(readOnly = true)
     public SignUpDto getMyUserWithAuthorities() {
@@ -93,8 +83,8 @@ public class SignService {
         User user = userRepository.findOneWithAuthoritiesByPhonenum(phonenum)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + phonenum));
             LOGGER.info("updateuser : {}" ,user);
-        // 업데이트할 정보를 updateInfo로부터 받아와서 member 엔터티에 반영
 
+        // 업데이트할 정보를 updateInfo로부터 받아와서 member 엔터티에 반영
         user.setPassword(passwordEncoder.encode(memberUpdateDto.getPassword()));
         user.setBirthday(memberUpdateDto.getBirthday());
         user.setUsername(memberUpdateDto.getUsername());

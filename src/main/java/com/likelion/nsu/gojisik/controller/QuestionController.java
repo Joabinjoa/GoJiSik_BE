@@ -1,9 +1,10 @@
 package com.likelion.nsu.gojisik.controller;
 
 import com.likelion.nsu.gojisik.domain.Question;
+import com.likelion.nsu.gojisik.dto.QuestionRequestDto;
+import com.likelion.nsu.gojisik.dto.QuestionResponseDto;
+import com.likelion.nsu.gojisik.dto.ResponseDto;
 import com.likelion.nsu.gojisik.dto.ResponseStatus;
-import com.likelion.nsu.gojisik.dto.*;
-import com.likelion.nsu.gojisik.service.AnswerService;
 import com.likelion.nsu.gojisik.service.FileService;
 import com.likelion.nsu.gojisik.service.QuestionService;
 import com.likelion.nsu.gojisik.service.SignService;
@@ -26,12 +27,11 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @RequestMapping("/questions")
 public class QuestionController {
-
     private static final Logger logger = LoggerFactory.getLogger(SecurityUtil.class);
     private final QuestionService questionService;
     private final FileService fileService;
     private final SignService signService;
-    private final AnswerService answerService;
+
     // 질문 리스트 조회
     @GetMapping
     public ResponseEntity<?> findQuestions() {
@@ -47,7 +47,7 @@ public class QuestionController {
                     .build();
             return ResponseEntity.ok().body(response);
         } catch (Exception e) {
-            ResponseDto<AnswerResponseDto> response = ResponseDto.<AnswerResponseDto>builder()
+            ResponseDto<QuestionResponseDto> response = ResponseDto.<QuestionResponseDto>builder()
                     .status(ResponseStatus.FAIL)
                     .message(e.getMessage())
                     .build();
@@ -61,9 +61,7 @@ public class QuestionController {
             @RequestPart(name = "files", required = false) List<MultipartFile> files,
             @RequestPart(name = "dto") QuestionRequestDto dto) {
         try {
-            logger.info("유저아이디 : {}" ,signService.getMyUserWithAuthorities());
             Long createdId = questionService.saveQuestion(signService.getMyUserWithAuthorities().getId(), dto);
-            logger.info("getid : {}",createdId);
             List<Long> result = new ArrayList<>(List.of(createdId));
             fileService.saveFile(createdId, files);
 
@@ -73,7 +71,7 @@ public class QuestionController {
                     .build();
             return ResponseEntity.ok().body(response);
         } catch (Exception e) {
-            ResponseDto<AnswerResponseDto> response = ResponseDto.<AnswerResponseDto>builder()
+            ResponseDto<QuestionResponseDto> response = ResponseDto.<QuestionResponseDto>builder()
                     .status(ResponseStatus.FAIL)
                     .message(e.toString())
                     .build();
@@ -86,14 +84,6 @@ public class QuestionController {
     public ResponseEntity<?> finedQuestion(@PathVariable("question_id") Long questionId,
                                            HttpServletRequest req, HttpServletResponse res) {
         try {
-            Question question = questionService.findById(questionId);
-            QuestionResponseDto dto = new QuestionResponseDto(question);
-            List<QuestionResponseDto> result = new ArrayList<>(List.of(dto));
-
-            ResponseDto<QuestionResponseDto> response = ResponseDto.<QuestionResponseDto>builder()
-                    .status(ResponseStatus.SUCCESS)
-                    .data(result)
-                    .build();
 
             Cookie oldCookie = null;
             Cookie[] cookies = req.getCookies();
@@ -117,7 +107,7 @@ public class QuestionController {
                     oldCookie.setMaxAge(60 * 60 * 24); 							// 쿠키 시간
                     res.addCookie(oldCookie);
                 }
-            // 이전 쿠기가 없다면
+                // 이전 쿠기가 없다면
             } else {
                 // 조회수 증가
                 this.questionService.updateHits(questionId);
@@ -126,6 +116,16 @@ public class QuestionController {
                 newCookie.setMaxAge(60 * 60 * 24); 								// 쿠키 시간
                 res.addCookie(newCookie);
             }
+
+            Question question = questionService.findById(questionId);
+            QuestionResponseDto dto = new QuestionResponseDto(question);
+            List<QuestionResponseDto> result = new ArrayList<>(List.of(dto));
+
+            ResponseDto<QuestionResponseDto> response = ResponseDto.<QuestionResponseDto>builder()
+                    .status(ResponseStatus.SUCCESS)
+                    .data(result)
+                    .build();
+
             return ResponseEntity.ok().body(response);
         } catch (Exception e) {
             ResponseDto<QuestionResponseDto> response = ResponseDto.<QuestionResponseDto>builder()
@@ -140,11 +140,8 @@ public class QuestionController {
     @GetMapping("/my-question")
     public ResponseEntity<?> findAnswersWithUser() {
         try {
-
             Long userid = signService.getMyUserWithAuthorities().getId();
-            logger.info("userid : ", userid);
             List<Question> questions = questionService.findByUserId(userid);
-            logger.info("questions:{}" , questions);
             List<QuestionResponseDto> questionDtos = questions.stream()
                     .map(QuestionResponseDto::new)
                     .collect(Collectors.toList());
@@ -155,7 +152,7 @@ public class QuestionController {
                     .build();
             return ResponseEntity.ok().body(response);
         } catch (Exception e) {
-            ResponseDto<AnswerResponseDto> response = ResponseDto.<AnswerResponseDto>builder()
+            ResponseDto<QuestionResponseDto> response = ResponseDto.<QuestionResponseDto>builder()
                     .status(ResponseStatus.FAIL)
                     .message(e.getMessage())
                     .build();

@@ -14,18 +14,17 @@ import java.util.stream.Collectors;
 @Getter
 @Builder
 public class SignUpDto {
-
+    private Long id;
     private String phonenum;
     private String password;
     private String username;
-    private LocalDateTime birthday;
-
-    private Long id;
     private int font;
+    private LocalDateTime birthday;
     private Set<AuthorityDto> authorityDtoSet;
 
     public static SignUpDto from(User user) {
-        if(user == null) return null;
+        if(user == null)
+            return null;
 
         return SignUpDto.builder()
                 .phonenum(user.getPhonenum())
@@ -41,7 +40,8 @@ public class SignUpDto {
     }
 
     public static SignUpDto Infofrom(User user) {
-        if(user == null) return null;
+        if(user == null)
+            return null;
 
         return SignUpDto.builder()
                 .phonenum(user.getPhonenum())
@@ -52,5 +52,4 @@ public class SignUpDto {
                         .collect(Collectors.toSet()))
                 .build();
     }
-
 }
