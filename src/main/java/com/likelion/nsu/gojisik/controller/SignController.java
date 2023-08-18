@@ -28,7 +28,7 @@ public class SignController {
         return ResponseEntity.ok(signService.getMyUserInfo());
     }
 
-    @PutMapping("/users/{phonenum}")
+    @PutMapping("/{phonenum}")
     public ResponseEntity<MemberUpdateDto> getUpdateInfo(@PathVariable String phonenum, @RequestBody MemberUpdateDto memberUpdateDto) {
         signService.updateUserInfo(phonenum, memberUpdateDto);
         return ResponseEntity.ok(memberUpdateDto);
